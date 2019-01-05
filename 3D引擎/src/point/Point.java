@@ -3,7 +3,7 @@ package point;
 import camera.Camera;
 
 public class Point {
-	public double x,y,z;
+	private double x,y,z;
 	public Point mid(Point b) {
 		return new Point((x+b.x)/2,(y+b.y)/2,(z+b.z)/2);
 	}
@@ -30,18 +30,18 @@ public class Point {
 	}
 	private void arcxy(double a) {
 		final Point2d xy=new Point2d(x,y).arc(a);
-		x=xy.x;
-		y=xy.y;
+		x=xy.getX();
+		y=xy.getY();
 	}
 	private void arcxz(double a) {
 		final Point2d xz=new Point2d(x,z).arc(a);
-		x=xz.x;
-		z=xz.y;
+		x=xz.getX();
+		z=xz.getY();
 	}
 	private void arcyz(double a) {
 		final Point2d yz=new Point2d(y,z).arc(a);
-		y=yz.x;
-		z=yz.y;
+		y=yz.getX();
+		z=yz.getY();
 	}
 	private void eqArc(double a,double b,double c) {
 		arcxy(a);
@@ -53,19 +53,28 @@ public class Point {
 		ans.eqArc(a, b, c);
 		return ans;
 	}
-	public Point2d draw(Camera camera) {
+	public Point2d toSrc(Camera camera) {
 		if(Math.abs(x)==0)return null;
 		final double bs = 1 / Math.abs(x);
 		final double yy =  y * bs / camera.getSrc() / camera.getWidth() * 2;
 		final double zz = -z * bs / camera.getSrc() / camera.getHeight() * 2;
-    	return new Point2d(yy,zz).toWin(camera.getWidth(), camera.getHeight());
+    	return new Point2d(yy,zz).toSrc(camera.getWidth(), camera.getHeight());
 	}
-	public Point get(Camera camera) {
+	public Point actualPoint(Camera camera) {
 		return move(camera.getXMove(), camera.getYMove(), camera.getZMove())
 				.arc(camera.getFlrArc(), camera.getHeiArc(), camera.getsrcArc())
 				.move(-camera.getDis(), 0, 0);
 	}
+	public double getX() {
+		return x;
+	}
+	public double getY() {
+		return y;
+	}
+	public double getZ() {
+		return z;
+	}
 	public String toString() {
-		return "Point ( "+x+", "+y+", "+z+")";
+		return "Point ("+x+", "+y+", "+z+")";
 	}
 }

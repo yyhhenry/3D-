@@ -81,15 +81,19 @@ class MyPanel extends JPanel implements MouseListener,MouseMotionListener,MouseW
 	private int n;
 	private Triangle[]v;
 	private final double src=0.001;
-	private final double deltaDis=0.001;
+	private final double deltaDis=0.003;
 	private final double minDis=0.5;
 	private final double maxDis=1000;
 	private Camera camera;
     public void paint(Graphics g){
         super.paint(g);
+        Triangle[]actualV=new Triangle[n];
+        for(int i=0;i<n;i++) {
+        	actualV[i]=v[i].actualTriangle(camera);
+        }
         for(double dis=maxDis;dis>=minDis;dis*=1-deltaDis) {
 	        for(int i=0;i<n;i++) {
-	        	v[i].draw(camera, g, dis*(1-deltaDis), dis);
+	        	actualV[i].draw(camera, g, dis*(1-deltaDis), dis);
 	        }
         }
         g.setColor(Color.gray);

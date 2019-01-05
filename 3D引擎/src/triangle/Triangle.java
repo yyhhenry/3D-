@@ -17,72 +17,99 @@ public class Triangle {
 		color=_color;
 	}
 	private void sortPoints() {
-		if(a.x>c.x) {
+		if(a.getX()>c.getX()) {
 			Point d=a;
 			a=c;
 			c=d;
 		}
-		if(b.x>c.x) {
+		if(b.getX()>c.getX()) {
 			Point d=b;
 			b=c;
 			c=d;
 		}
-		if(a.x>b.x) {
+		if(a.getX()>b.getX()) {
 			Point d=a;
 			a=b;
 			b=d;
 		}
 	}
 	public String toString() {
-		return "Triangle( Color = "+color.toString()+") { "+a.toString()+", "+b.toString()+", "+c.toString()+"}";
+		return "Triangle(Color = "+color.toString()+") {"+a.toString()+", "+b.toString()+", "+c.toString()+"}";
 	}
-	private void draw(Camera camera, Graphics g,Point a,Point b,Point c) {
-		final Point2d pa=a.draw(camera);
-		final Point2d pb=b.draw(camera);
-		final Point2d pc=c.draw(camera);
-		final int[] xPoints= {(int)pa.x, (int)pb.x, (int)pc.x, (int)pa.x};
-		final int[] yPoints= {(int)pa.y, (int)pb.y, (int)pc.y, (int)pa.y};
+	private void wholeDraw(Camera camera, Graphics g) {
+		g.setColor(color);
+		final Point2d pa=a.toSrc(camera);
+		final Point2d pb=b.toSrc(camera);
+		final Point2d pc=c.toSrc(camera);
+		final int[] xPoints= {pa.getIntX(), pb.getIntX(), pc.getIntX(), pa.getIntX()};
+		final int[] yPoints= {pa.getIntY(), pb.getIntY(), pc.getIntY(), pa.getIntY()};
 		final int nPoints=4;
 		g.fillPolygon(xPoints,yPoints,nPoints);
 	}
-	public void draw(Camera camera,Graphics g,double dis,double lastDis) {
-		new Triangle(a.get(camera),b.get(camera),c.get(camera),color).vDraw(camera, g, dis, lastDis);
+	public Triangle actualTriangle(Camera camera) {
+		return new Triangle(a.actualPoint(camera),b.actualPoint(camera),c.actualPoint(camera),color);
 	}
-	private void vDraw(Camera camera,Graphics g,double dis,double lastDis) {
+	public void draw(Camera camera,Graphics g,double dis,double lastDis) {
 		sortPoints();
 		g.setColor(color);
-		if(c.x<dis)return;
-		if(a.x>lastDis)return;
-		if(c.x>lastDis) {
-			if(b.x>lastDis) {
-				if(a.x>dis) {
-					draw(camera,g,a,a.takeX(b, lastDis),a.takeX(c, lastDis));
+		if(c.getX()<dis)return;
+		if(a.getX()>lastDis)return;
+		if(c.getX()>lastDis) {
+			if(b.getX()>lastDis) {
+				if(a.getX()>dis) {
+					new Triangle(
+							a,a.takeX(b, lastDis),a.takeX(c, lastDis),color
+					).wholeDraw(camera,g);
 				}else {
-					draw(camera,g,a.takeX(b, dis),a.takeX(b, lastDis),a.takeX(c, dis));
-					draw(camera,g,a.takeX(c, lastDis),a.takeX(b, lastDis),a.takeX(c, dis));
+					new Triangle(
+							a.takeX(b, dis),a.takeX(b, lastDis),a.takeX(c, dis),color
+					).wholeDraw(camera, g);
+					new Triangle(
+							a.takeX(c, lastDis),a.takeX(b, lastDis),a.takeX(c, dis),color
+					).wholeDraw(camera, g);
 				}
-			}else if(b.x>dis) {
-				if(a.x>dis) {
-					draw(camera,g,a,b,a.takeX(c, lastDis));
-					draw(camera,g,b.takeX(c, lastDis),b,a.takeX(c, lastDis));
+			}else if(b.getX()>dis) {
+				if(a.getX()>dis) {
+					new Triangle(
+							a,b,a.takeX(c, lastDis),color
+					).wholeDraw(camera, g);
+					new Triangle(
+							b.takeX(c, lastDis),b,a.takeX(c, lastDis),color
+					).wholeDraw(camera, g);
 				}else {
-					new Triangle(a,b,a.takeX(c, (dis+lastDis)/2),color).vDraw(camera, g, dis, lastDis);
-					new Triangle(c,b,a.takeX(c, (dis+lastDis)/2),color).vDraw(camera, g, dis, lastDis);
+					new Triangle(
+							a,b,a.takeX(c, (dis+lastDis)/2),color
+					).draw(camera, g, dis, lastDis);
+					new Triangle(
+							c,b,a.takeX(c, (dis+lastDis)/2),color
+					).draw(camera, g, dis, lastDis);
 				}
 			}else {
-				draw(camera,g,a.takeX(c, dis),a.takeX(c, lastDis),b.takeX(c, dis));
-				draw(camera,g,b.takeX(c, lastDis),a.takeX(c, lastDis),b.takeX(c, dis));
+				new Triangle(
+						a.takeX(c, dis),a.takeX(c, lastDis),b.takeX(c, dis),color
+				).wholeDraw(camera, g);
+				new Triangle(
+						b.takeX(c, lastDis),a.takeX(c, lastDis),b.takeX(c, dis),color
+				).wholeDraw(camera, g);
 			}
 		}else {
-			if(b.x>dis) {
-				if(a.x>dis) {
-					draw(camera,g,a,b,c);
+			if(b.getX()>dis) {
+				if(a.getX()>dis) {
+					new Triangle(
+							a,b,c,color
+					).wholeDraw(camera, g);
 				}else {
-					draw(camera,g,a.takeX(b, dis),b,a.takeX(c, dis));
-					draw(camera,g,c,b,a.takeX(c, dis));
+					new Triangle(
+							a.takeX(b, dis),b,a.takeX(c, dis),color
+					).wholeDraw(camera, g);
+					new Triangle(
+							c,b,a.takeX(c, dis),color
+					).wholeDraw(camera, g);
 				}
 			}else {
-				draw(camera,g,a.takeX(c, dis),b.takeX(c, dis),c);
+				new Triangle(
+						a.takeX(c, dis),b.takeX(c, dis),c,color
+				).wholeDraw(camera, g);
 			}
 		}
 	}

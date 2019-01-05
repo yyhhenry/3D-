@@ -1,31 +1,19 @@
 package point;
 
 public class Point2d {
-	public double x,y;
-	public Point2d(double a,double b){
-		x=a;
-		y=b;
+	private double x,y;
+	public Point2d(double _x,double _y){
+		x=_x;
+		y=_y;
 	}
-	
 	public double disTo(Point2d b) {
 		final double xx=x-b.x;
 		final double yy=y-b.y;
 		return Math.sqrt(xx*xx+yy*yy);
 	}
 	
-	public Point2d toWin(int W,int H) {
+	public Point2d toSrc(int W,int H) {
 		return new Point2d((x+1)/2*W,(y+1)/2*H);
-	}
-
-	public boolean isdrawed(boolean[][]drawed) {
-		if((int)(x)>=drawed.length||(int)(x)<0)return false;
-		if((int)(y)>=drawed[(int)(x)].length||(int)(y)<0)return false;
-		return drawed[(int)(x)][(int)(y)];
-	}
-	
-	public boolean near(Point2d b) {
-		final double theta=1;
-		return disTo(b)<=theta;
 	}
 	
 	public Point2d arc(double a) {
@@ -35,7 +23,19 @@ public class Point2d {
 		double narc=sign*Math.acos(x/dis)+a;
 		return new Point2d(Math.cos(narc)*dis,Math.sin(narc)*dis);
 	}
+	public double getX() {
+		return x;
+	}
+	public int getIntX() {
+		return (int)(x);
+	}
+	public double getY() {
+		return y;
+	}
+	public int getIntY() {
+		return (int)(y);
+	}
 	public String toString() {
-		return "Point2d ( "+x+", "+y+")";
+		return "Point2d ("+x+", "+y+")";
 	}
 }
