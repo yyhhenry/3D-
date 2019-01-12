@@ -1,4 +1,5 @@
 import java.awt.Color;
+
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
@@ -13,6 +14,7 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JOptionPane; 
 
 import camera.Camera;
 import point.Point;
@@ -26,7 +28,7 @@ public class DrawSee extends JFrame implements KeyListener{
 	private MyPanel mp;
 	private int W=800,H=600;
     private Color rectColor = new Color(255,255,255);
-    public DrawSee(){
+    public DrawSee() throws FileNotFoundException{
         Container p = getContentPane();
         mp=new MyPanel(W,H);
         this.add(mp);
@@ -100,15 +102,16 @@ class MyPanel extends JPanel implements MouseListener,MouseMotionListener,MouseW
         g.drawLine(camera.getWidth()/2-10, camera.getHeight()/2, camera.getWidth()/2+10, camera.getHeight()/2);
         g.drawLine(camera.getWidth()/2, camera.getHeight()/2-10, camera.getWidth()/2, camera.getHeight()/2+10);
     }
-    MyPanel(int _W,int _H){
+    @SuppressWarnings("resource")
+	MyPanel(int _W,int _H) throws FileNotFoundException{
     	n=0;
     	Scanner fin;
     	try {
 			fin=new Scanner(new File("./val.in"));
 		} catch (FileNotFoundException e) {
 			fin=new Scanner(System.in);
-			System.out.println("应用找不到关键文件\"val.in\"。");
-			//return;
+			JOptionPane.showMessageDialog(null, "应用找不到关键文件val.in。","文件缺失",JOptionPane.ERROR_MESSAGE);
+			throw e;
 		}
     	n=fin.nextInt();
     	double dis=fin.nextDouble();
