@@ -25,6 +25,11 @@ public class Camera {
 		dis=_dis;
 		flrArc=_flrArc;
 		heiArc=_heiArc;
+		if(heiArc>Math.PI/2) {
+			heiArc=Math.PI/2;
+		}else if(heiArc<-Math.PI/6) {
+			heiArc=-Math.PI/6;
+		}
 		srcArc=_srcArc;
 	}
 	public Camera resize(double _src,int _width,int _height) {
