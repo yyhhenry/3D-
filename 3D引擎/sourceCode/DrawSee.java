@@ -47,7 +47,7 @@ public class DrawSee extends JFrame implements KeyListener{
         	public void componentResized(ComponentEvent e){
         	    W=e.getComponent().getWidth();
         	    H=e.getComponent().getHeight();
-        	    mp.resize(W, H);
+        	    mp.cameraResize(W, H);
                 p.setBackground(rectColor);
         	}
         });
@@ -140,7 +140,7 @@ class MyPanel extends JPanel implements MouseListener,MouseMotionListener,MouseW
     	fin.close();
     	camera=new Camera(src,_W,_H,0,0,0,dis,0,0,0);
     }
-    public void resize(int _W,int _H) {
+    public void cameraResize(int _W,int _H) {
     	camera=camera.resize(src,_W,_H);
     }
     private void arc(double a,double b,double c) {
